@@ -1,0 +1,73 @@
+<% mine = !!(@current_user && @current_user.id == @profile.user_id) %>
+<br/>
+
+<h1>Stats for <%= @profile.name %></h1>
+
+<ul>
+  <li>
+    <strong>Site URL:</strong>
+    <%= @profile.url && link @profile.url, to: "http://#{@profile.url}" %>
+  </li>
+
+  <li>
+    <strong>Twitter:</strong>
+    <%= @profile.twitter && link "@" <> @profile.twitter, to: "https://twitter.com/#{@profile.twitter}" %>
+  </li>
+
+  <li>
+    <strong>YouTube:</strong>
+    <%= @profile.youtube %>
+  </li>
+
+  <%= if @admin_user || mine do %>
+  <li>
+    <strong>User ID:</strong>
+    <%= @profile.user_id %>
+  </li>  
+  <% end %>
+</ul>
+
+<table>
+  <style>
+    table {width: 100%;}
+    table th, table td {text-align: center;}
+  </style>
+  <thead>
+    <tr>
+      <th> DateTime </th> 
+      <th> Subscribers </th> 
+      <th> Videos </th> 
+      <th> Views </th> 
+      <th> Twitter Followers </th> 
+      <th> Alexa Rank </th>
+    </tr>
+  </thead>  
+
+  <%= for stat <- @profile.stats do %> 
+    <tr>
+      <td>
+        <%= stat.inserted_at |> NaiveDateTime.to_string %>
+      </td>
+      <td> 
+        <%= if stat.youtube_subscribers == -1, do: "-", else: stat.youtube_subscribers %>
+      </td>
+      <td> 
+        <%= if stat.youtube_videos == -1, do: "-", else: stat.youtube_subscribers %>
+      </td>
+      <td> 
+        <%= if stat.youtube_views == -1, do: "-", else: stat.youtube_subscribers %>
+      </td>
+      <td> 
+        <%= if stat.twitter_followers == -1, do: "-", else: stat.twitter_followers %>
+      </td>
+      <td> 
+        <%= if stat.alexa_rank == -1, do: "-", else: stat.alexa_rank %>
+      </td>
+    </tr>  
+  <% end %>
+</table>
+
+<%= if @admin_user || mine do %>
+<span><%= link "Edit", to: Routes.profile_path(@conn, :edit, @profile) %></span> | 
+<% end %>
+<span><%= link "All Profiles", to: Routes.profile_path(@conn, :index) %></span>

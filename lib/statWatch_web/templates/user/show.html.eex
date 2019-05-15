@@ -1,0 +1,21 @@
+<% self = !!(@current_user && @current_user.id == @user.id) %>
+
+<h1><%= @user.username%></h1>
+<br/>
+<strong>Name:</strong> <%= @user.name %>
+<br/>
+<strong>Email:</strong> <%= @user.credential.email%>
+<br/>
+<%= if @admin_user || self do %>
+  <%= button "Create Profile", to: Routes.profile_path(@conn, :new),
+      method: "get", class: "btn btn-primary", style: "margin-top: 1em;"%>
+<% end %>
+<hr/>
+
+<%= if @admin_user || self do %>
+<span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user) %></span>
+| <span><%= link "My Profiles", to: Routes.profile_path(@conn, :index) %></span>
+<% end %>
+<%= if @admin_user do %>
+| <span><%= link "All Users", to: Routes.user_path(@conn, :index) %></span>
+<% end %>
